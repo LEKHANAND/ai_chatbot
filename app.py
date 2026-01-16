@@ -4,11 +4,16 @@ from flask_cors import CORS
 import google.generativeai as genai
 
 app = Flask(__name__)
-CORS(app)  # allow GitHub Pages to call Render
+CORS(app)  # allow GitHub Pages to talk to Render
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-pro")
+# 🔑 Configure Gemini
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY is not set")
+
+genai.configure(api_key=GEMINI_API_KEY)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 @app.route("/")
 def health():
@@ -17,10 +22,10 @@ def health():
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
-    user_msg = data.get("message", "")
+    user_msg = data.get("message", "").strip()
 
     if not user_msg:
-        return jsonify({"reply": "Please type something."})
+        return jsonify({"reply": "Please type something 🙂"})
 
     try:
         response = model.generate_content(user_msg)
@@ -29,7 +34,8 @@ def chat():
         return jsonify({"reply": f"Error: {str(e)}"})
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
 
 
 
