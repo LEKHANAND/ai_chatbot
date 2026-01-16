@@ -13,7 +13,7 @@ if not GEMINI_API_KEY:
     raise ValueError("GEMINI_API_KEY is not set")
 
 genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-pro")
 
 @app.route("/")
 def health():
@@ -36,6 +36,7 @@ def chat():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 
