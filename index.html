@@ -4,6 +4,27 @@
     <title>AI Chatbot</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
+    <script>
+function sendMessage() {
+  const input = document.getElementById("userInput");
+  const message = input.value;
+  if (message === "") return;
+
+  const chat = document.getElementById("chat");
+  chat.innerHTML += "<p><b>You:</b> " + message + "</p>";
+
+  let reply = "I am a simple chatbot 🙂";
+  if (message.toLowerCase().includes("hi")) {
+    reply = "Hello! 👋";
+  } else if (message.toLowerCase().includes("name")) {
+    reply = "I am your AI chatbot 🤖";
+  }
+
+  chat.innerHTML += "<p><b>Bot:</b> " + reply + "</p>";
+  input.value = "";
+}
+</script>
+
 <body>
     <div class="chat-container">
         <h2>AI Chatbot 🤖</h2>
@@ -37,3 +58,4 @@
     </script>
 </body>
 </html>
+
