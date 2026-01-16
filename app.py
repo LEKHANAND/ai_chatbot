@@ -1,29 +1,37 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import google.generativeai as genai
 
 app = Flask(__name__)
-CORS(app)   # ✅ allow GitHub Pages to talk to Render
+CORS(app)  # allow GitHub Pages to call Render
+
+# Configure Gemini
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+model = genai.GenerativeModel("gemini-pro")
+
 @app.route("/")
 def health():
     return "AI Chatbot backend is running 🚀"
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
-    user_msg = data.get("message", "").lower()
+    user_msg = data.get("message", "")
 
-    if "hello" in user_msg or "hi" in user_msg:
-        reply = "Hello! 👋 How can I help you?"
-    elif "name" in user_msg:
-        reply = "I am your AI chatbot 🤖"
-    elif "bye" in user_msg:
-        reply = "Goodbye! Have a nice day 👋"
-    else:
-        reply = "Sorry, I am still learning 😅"
+    if not user_msg:
+        return jsonify({"reply": "Please type something."})
 
-    return jsonify({"reply": reply})
+    try:
+        response = model.generate_content(user_msg)
+        return jsonify({"reply": response.text})
+    except Exception as e:
+        return jsonify({"reply": f"Error: {str(e)}"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
+
 
 
 
