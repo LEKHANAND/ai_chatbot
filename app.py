@@ -3,7 +3,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)   # ✅ allow GitHub Pages to talk to Render
-
+@app.route("/")
+def health():
+    return "AI Chatbot backend is running 🚀"
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -22,5 +24,6 @@ def chat():
 
 if __name__ == "__main__":
     app.run()
+
 
 
