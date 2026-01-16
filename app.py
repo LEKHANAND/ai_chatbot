@@ -28,7 +28,7 @@ def chat():
 
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-pro",
+            model="gemini-1.0-pro",
             contents=user_msg
         )
         return jsonify({"reply": response.text})
@@ -38,6 +38,8 @@ def chat():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+
 
 
 
